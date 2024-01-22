@@ -4,11 +4,16 @@ import { Link } from "react-router-dom";
 import Main from "../layout/Main";
 import BreadCrumbs from "../components/BreadCrumbs";
 import SearchBar from "../components/SearchBar";
+import MyAd from "../components/MyAd";
 
 const Home = () => {
   const [surah, setSurah] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sortOrder, setSortOrder] = useState(() => {
+    // Retrieve sorting order from local storage or use default value
+    return localStorage.getItem("sortOrder") || "desc";
+  });
 
   const getSurah = async () => {
     setLoading(true);
@@ -18,9 +23,16 @@ const Home = () => {
       setLoading(false);
     } catch (e) {
       console.log(e);
-    } finally {
       setLoading(false);
     }
+  };
+
+  const handleSortChange = () => {
+    // Toggle sorting order
+    const newSortOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newSortOrder);
+    // Save sorting order to local storage
+    localStorage.setItem("sortOrder", newSortOrder);
   };
 
   useEffect(() => {
@@ -38,16 +50,44 @@ const Home = () => {
             </div>
           </div>
         </nav>
-        <div className="px-7 pt-6">
+        <div className="px-5 pt-2">
           <div>
-            <p className="text-gray-500">Al-Quran</p>
-            <p className="text-3xl font-semibold mt-2">Baca Surah</p>
+            <p className="text-3xl font-semibold mt-2">Al-Quran Indonesia</p>
           </div>
           <div className="mt-4">
             <SearchBar
               placeholder="Cari Surah"
               onChangeSearch={(e) => setSearch(e.target.value.toLowerCase())}
             />
+            <div className="ChapterAndJuzList_sorter__EiaST mt-2">
+              <div
+                className="flex items-center"
+                role="button"
+                tabIndex={0}
+                onClick={handleSortChange}
+              >
+                <span className="text-sm">
+                  {" "}
+                  Sorting Dengan :{sortOrder === "asc" ? " Menaik" : " Menurun"}
+                </span>
+                <span className="">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="18"
+                    height="18"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                    shapeRendering="geometricPrecision"
+                    style={{ color: "currentcolor" }}
+                  >
+                    <path d="m6 9 6 6 6-6"></path>
+                  </svg>
+                </span>
+              </div>
+            </div>
           </div>
           {loading ? (
             <div className="mt-8 grid place-items-center">
@@ -60,11 +100,16 @@ const Home = () => {
             <div className="mt-8">
               {surah
                 .filter((_surah) =>
-                  search.toLowerCase === ""
+                  search.toLowerCase() === ""
                     ? _surah
                     : _surah.name.transliteration.id
                         .toLowerCase()
                         .includes(search)
+                )
+                .sort((a, b) =>
+                  sortOrder === "asc"
+                    ? a.number - b.number
+                    : b.number - a.number
                 )
                 .map((_surah) => (
                   <Link to={`/surah/${_surah.number}`} key={_surah?.number}>

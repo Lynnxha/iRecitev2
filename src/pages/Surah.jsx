@@ -157,9 +157,9 @@ const Surah = () => {
                 </Link>
               </div>
               <hr />
-              <p className="text-gray-500 my-3">
+              <p className="text-gray-700 my-3">
                 <span>{detailSurat?.revelation?.id}</span> -{" "}
-                <span>{detailSurat?.numberOfVerses} ayat</span>
+                <span>{detailSurat?.numberOfVerses} Ayat</span>
               </p>
               <p className="text-gray-500 desc hidden transition-all ease duration-300">
                 {detailSurat?.tafsir?.id}
@@ -235,7 +235,7 @@ const Surah = () => {
                 <div className="text-center mt-4 mb-8">
                   <button
                     type="button"
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded"
+                    className="bg-emerald-500 hover:bg-emerald-900 text-white font-semibold py-2 px-4 rounded-full"
                     onClick={() => setRenderedAyatCount(renderedAyatCount + 25)}
                   >
                     Muat lebih banyak ayat
